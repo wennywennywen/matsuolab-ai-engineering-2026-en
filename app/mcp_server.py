@@ -26,6 +26,7 @@ server = MCPServer(
 
 # Expose the same function as in Lecture 03 as an MCP tool. Its docstring and type hints become the description
 server.tool()(tools.search_glossary)
+server.tool()(tools.make_quiz)
 
 # TODO(Basic homework): expose get_lecture_summary as well
 
@@ -44,3 +45,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
