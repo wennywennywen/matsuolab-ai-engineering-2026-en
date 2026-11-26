@@ -38,4 +38,7 @@
   - With `raise`, my message did not reach the model. The MCP server logged the full `ValueError` in my terminal but sent the model only "Error executing tool make_quiz". The model could guess that Lecture 99 doesn't exist, because that was in my question. It could not name the lectures that do exist, so it could only say "choose an existing lecture number".
   - With `return`, the model got the list of available lectures and suggested a quiz for one of them, so the answer was more useful.
   - In this run Gemini did not retry after the error (2 model responses in both cases). In a test with a fake model that always repeats the same call, the `raise` version retried, then stopped with "exceeded max retries count of 1". So `raise` can also cost extra model calls or end the run.
-  - Conclusion: use `return` with a clear message for expected problems the model can act on, such as a bad argument. Keep `raise` for real failures, such as a missing file. Question: when a tool raises an error, should the MCP server send the error message to the model, or is hiding it safer because messages could leak internal details?
+  - Ask: "Can the model do something useful with the error message?"
+Yes → return a clear message. Say what went wrong and what is possible instead. Examples: lecture doesn't exist, no search results, date out of range.
+No → raise. It's a real failure that you need to fix. Examples: glossary file missing, server down, a bug in your code.
+
