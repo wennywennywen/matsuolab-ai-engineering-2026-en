@@ -37,6 +37,16 @@ def test_base_tools_are_registered_and_called(monkeypatch):
     assert result.output
 
 
+def test_make_quiz_is_registered_and_returns_quiz():
+    model = TestModel(call_tools=["make_quiz"])
+    with agent.override(model=model):
+        result = agent.run_sync("Give me one review question for Lecture 2")
+    offered = {t.name for t in model.last_model_request_parameters.function_tools}
+    assert "make_quiz" in offered
+    returns = _parts(result, ToolReturnPart)
+    assert returns and returns[0].tool_name == "make_quiz"
+
+
 def test_material_result_reaches_the_model(monkeypatch):
     hit = {"page_id": "lec02-main-p052", "lecture": 2, "page": 52, "content": "The original weights are frozen"}
     monkeypatch.setattr("app.retrieval.search", lambda *args, **kwargs: [hit])
